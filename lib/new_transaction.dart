@@ -83,14 +83,14 @@ class _NewTransactionState extends State<NewTransaction> {
                   ),
                   FlatButton(
                     onPressed: _presentDatePicker,
-                    child: Text('Choose Date'),
+                    child: const Text('Choose Date'),
                   )
                 ],
               ),
             ),
             FlatButton(
               onPressed: _submitData,
-              child: Text('Add Transaction'),
+              child: const Text('Add Transaction'),
             )
           ],
         ),

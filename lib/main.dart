@@ -156,13 +156,62 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  List<Widget> _buiderLandscapeContent(
+    MediaQueryData mediaQuery,
+    AppBar appBar,
+    Widget txList,
+  ) {
+    return [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          const Text('Show/Hide Chart'),
+          Switch(
+            value: _showChart,
+            onChanged: (val) {
+              setState(() {
+                _showChart = val;
+              });
+            },
+          ),
+        ],
+      ),
+      _showChart
+          ? Container(
+              height: (mediaQuery.size.height -
+                      appBar.preferredSize.height -
+                      mediaQuery.padding.top) *
+                  0.7,
+              child: Chart(_recentTransactions),
+            )
+          : txList
+    ];
+  }
+
+  List<Widget> _buiderPortraitContent(
+    MediaQueryData mediaQuery,
+    AppBar appBar,
+    Widget txList,
+  ) {
+    return [
+      Container(
+        height: (mediaQuery.size.height -
+                appBar.preferredSize.height -
+                mediaQuery.padding.top) *
+            0.25,
+        child: Chart(_recentTransactions),
+      ),
+      txList
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final isLandscape = mediaQuery.orientation == Orientation.landscape;
 
     final appBar = AppBar(
-      leading: Icon(Icons.menu),
+      leading: const Icon(Icons.menu),
       title: Text(
         'Personal Expenses',
         style: Theme.of(context).appBarTheme.textTheme.title,
@@ -170,7 +219,7 @@ class _MyHomePageState extends State<MyHomePage> {
       centerTitle: true,
       actions: <Widget>[
         IconButton(
-          icon: Icon(Icons.add),
+          icon: const Icon(Icons.add),
           onPressed: () => _startAddNewTx(context),
         )
       ],
@@ -188,44 +237,22 @@ class _MyHomePageState extends State<MyHomePage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           if (isLandscape)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('Show/Hide Chart'),
-                Switch(
-                  value: _showChart,
-                  onChanged: (val) {
-                    setState(() {
-                      _showChart = val;
-                    });
-                  },
-                ),
-              ],
+            ..._buiderLandscapeContent(
+              mediaQuery,
+              appBar,
+              txList,
             ),
           if (!isLandscape)
-            Container(
-              height: (mediaQuery.size.height -
-                      appBar.preferredSize.height -
-                      mediaQuery.padding.top) *
-                  0.25,
-              child: Chart(_recentTransactions),
+            ..._buiderPortraitContent(
+              mediaQuery,
+              appBar,
+              txList,
             ),
-          if (!isLandscape) txList,
-          if (isLandscape)
-            _showChart
-                ? Container(
-                    height: (mediaQuery.size.height -
-                            appBar.preferredSize.height -
-                            mediaQuery.padding.top) *
-                        0.7,
-                    child: Chart(_recentTransactions),
-                  )
-                : txList,
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () => _startAddNewTx(context),
       ),
     );
